@@ -1,0 +1,125 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quaedam Prex</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body onload="init()">
+    <div style="width: fit-content; margin: auto;" id="app">
+        <h1>Quaedam Prex</h1>
+        <h3 id="bookid" v-html="title"></h3>
+        <pre id="pre">
+        <p style="white-space: pre; white-space: pre-line;" id="paragraph" @click="doSomething" v-html="page"></p>
+        <div style="display: flex; justify-content: space-between;">
+            <p style="white-space: pre; white-space: pre-line;">App generated using Erica Corral Auto-Book Generator.
+                Learn more about the project <a href="https://github.com/erica-corral/erica-corral.github.io/tree/main/auto-book">here</a>
+            </p>
+            <button id="prevbtn" onclick="prev()" class="btn btn-primary btn-sm">Previous Book</button>
+            <button id="nextbtn" onclick="next()" class="btn btn-primary btn-sm">Next Book</button>
+        </div>
+        <p>
+
+
+
+            
+        </p>
+        </pre>
+        <div style="position: fixed; bottom: 0;" class="card">
+            <div class="card-body">
+                <h5 class="card-title">Whitakers Entry</h5>
+            <iframe id="whitakers-entry" style="width: 539;"></iframe>
+            
+
+            </div>
+
+        </div>
+    </div>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+<script>
+    var books = [`Rōbora tanta tibī, Sāturnie tūtor aquārum,
+multaque crēdita sunt!  vastās tua nūmina vīrēs
+quae venerāmur habent, habuērunt, posthoc habēbunt 
+cum cernent pelagus sōlummodo saecla nepōtum.
+Cum validō saevās undās domināre tridentī,
+tum deus es terram sōlus quī vexat eōdem.
+Quot monumenta tuī terrae mōtūs abolērunt!
+Num maculāvit vel Phidiās vel vulgus Achaeum
+nūmina Neptūnī tantō vitiō violentī
+ut scelere atque malō vīsīs incēnsus in altō
+saevus eburneolum ruerēs raptor simulācrum?
+Quaeve simultātēs frāternae corda tenēbant  
+ut frātris statuam propriō templō lacerārēs?
+Glōria quae tuita est clārissima Olympia lāpsa est
+sīc miserā arte tuā, Neptūne potēns et inīque.
+Paenituitne deōs dominōsque perinde Colossī
+nec mūrōs vīctōs expugnātōre repulsō?
+Taedēbatne adeō Sōlem radiāre figūram
+ut peteret fortī ab domitōre maris furibundī
+excidium dōnī miserābile mōtibus amplī?
+Mausōlēum cum fabricīs īnsigne sepulcrum
+prīmigenō mōtū, Neptūne, friāre nequīrēs 
+et super āmēns esse audēret rēgia sēdēs,
+parcere mīlle annōs negitābās laedere bustum
+dum remanēret deinde nihil nisi saxea mōlēs.
+Pendulus hortus sī praesēns Babylōnius umquam                                                                     
+tū quoque dēlēssēs, animōse proterveque cūstōs!
+Fās fortasse fuit faciendum, Fātaque fīlum 
+sīc secuēre colō fūnestō morte tribūtā.
+Quaenam dūrābunt?  etiam quoniam optima linquunt--
+dēsine, sī fās est, Neptūne, ciēre labōrēs!
+`] 
+    
+    var book_titles = [`Quaedam Prex`]
+    var page = books[0]
+    var title = book_titles[0]
+    var count = 0
+    
+    var vm = new Vue({
+      el: '#app',
+      data() {
+        return{
+          page,
+         title
+      };
+      },
+      methods: {
+        doSomething (e) {
+          const sel = window.getSelection();
+          const text = sel.anchorNode.textContent;
+          const lmatch = text.substr(0, sel.anchorOffset).match(/[\s\S]*\s/);
+          const offset = lmatch ? lmatch[0].length : 0;
+          const match = text.substr(offset).normalize("NFKD").replace(/[^\w\s.-_\/]/g, '').match(/\w+/);
+          var word_to_look_up = (match && match[0])
+          document.getElementById("whitakers-entry").src="https://whitakers-api.herokuapp.com/translate/"+word_to_look_up
+          console.log(match && match[0]);
+        }
+      }
+    })
+    function init(){
+      if(localStorage.getItem("Quaedam Prex")!=undefined){
+        count = localStorage.getItem("Quaedam Prex")
+      }
+      page= books[count]
+      title = book_titles[count]
+      vm.page = page
+      vm.title = title
+    }
+    function next(){
+      count++
+      if(count>0){
+        count= 0
+      }
+      localStorage.setItem("Quaedam Prex",count)
+      init()
+    }
+    
+    function prev(){
+      count--;
+      if(count<0){
+        count = 0
+      }
+      localStorage.setItem("Quaedam Prex", count)
+      init()
+    }</script>
+</body>
